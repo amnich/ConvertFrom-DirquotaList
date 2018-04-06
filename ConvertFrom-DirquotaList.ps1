@@ -58,16 +58,21 @@ function ConvertFrom-DirquotaList {
 				if (($dirQuotaItems[$i + 1] -match "Description:") -or ($dirQuotaItems[$i + 1] -match "Beschreibung:")){
 					$i++
 				}
+                $SharePath = @()
                 if (($dirQuotaItems[$i + 1] -match "Share Path:") -or ($dirQuotaItems[$i + 1] -match "Freigabepfad:") -or ($dirQuotaItems[$i + 1] -match "Szablon .r.d.owy:") ) {
-                    [String]$SharePath = ($dirQuotaItems[$i + 1] -split $pattern)[1]
+                    $SharePath += ($dirQuotaItems[$i + 1] -split $pattern)[1]
+					while (($dirQuotaItems[$i + 2]).trim() -match "^\\\\"){
+						$i++
+						$SharePath += ($dirQuotaItems[$i + 1] -split $pattern)[1]
+					}
                 } else {
                     $SharePath = $null
                     $i--
                 }
-                [String]$Template, $TemplateMatch = (($dirQuotaItems[$i + 2] -split $pattern)[1] -split "\(")
+                [String]$Template, $TemplateMatch = (($dirQuotaItems[$i + 2].trim() -split $pattern)[1] -split "\(")
                 $templateMatch = $templateMatch.Substring(0, $templateMatch.Length - 1)
                 [String]$QuotaStatus = ($dirQuotaItems[$i + 3] -split $pattern)[1]
-                [String]$LimitString, $LimitFigure, $LimitType = (($dirQuotaItems[$i + 4] -split $pattern)[1] -split " ")
+                [String]$LimitString, $LimitFigure, $LimitType = (($dirQuotaItems[$i + 4].trim() -split $pattern)[1] -split " ")
                 if (!$seperator) {
                     if ($LimitString -match '\..*\,') {
                         $seperator = ','
