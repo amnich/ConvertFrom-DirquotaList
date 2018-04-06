@@ -33,10 +33,10 @@ function ConvertFrom-DirquotaList {
 
         #region Helper functions
         function Convert-Size {
-            <#
-			.SYNOPSIS
-			helper function to convert size to GB
-			#>
+	<#
+		.SYNOPSIS
+		helper function to convert size to GB
+	#>
             param (
                 $string, $seperator, $Figure
             )
@@ -74,16 +74,16 @@ function ConvertFrom-DirquotaList {
         for ($i = 0; $i -lt $dirQuotaItems.count - 1; $i++) {
             if (($dirQuotaItems[$i] -match "Quota Path:") -or ($dirQuotaItems[$i] -match "Kontingentpfad:") -or ($dirQuotaItems[$i] -match "ka przydzia.u:")) {
                 [String]$QuotaPath = ($dirQuotaItems[$i] -split $pattern)[1]
-				if (($dirQuotaItems[$i + 1] -match "Description:") -or ($dirQuotaItems[$i + 1] -match "Beschreibung:")){
-					$i++
-				}
+		if (($dirQuotaItems[$i + 1] -match "Description:") -or ($dirQuotaItems[$i + 1] -match "Beschreibung:")){
+			$i++
+		}
                 $SharePath = @()
                 if (($dirQuotaItems[$i + 1] -match "Share Path:") -or ($dirQuotaItems[$i + 1] -match "Freigabepfad:") -or ($dirQuotaItems[$i + 1] -match "Szablon .r.d.owy:") ) {
-                    $SharePath += ($dirQuotaItems[$i + 1] -split $pattern)[1]
-					while (($dirQuotaItems[$i + 2]).trim() -match "^\\\\"){
-						$i++
-						$SharePath += ($dirQuotaItems[$i + 1] -split $pattern)[1]
-					}
+			$SharePath += ($dirQuotaItems[$i + 1] -split $pattern)[1]
+			while (($dirQuotaItems[$i + 2]).trim() -match "^\\\\"){
+				$i++
+				$SharePath += ($dirQuotaItems[$i + 1] -split $pattern)[1]
+			}
                 } else {
                     $SharePath = $null
                     $i--
